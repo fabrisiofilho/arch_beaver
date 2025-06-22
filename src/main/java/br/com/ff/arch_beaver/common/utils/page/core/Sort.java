@@ -1,0 +1,23 @@
+package br.com.ff.arch_beaver.common.utils.page.core;
+
+import com.querydsl.core.types.Order;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class Sort {
+
+    @NotNull
+    private String property;
+    @NotNull
+    private String direction;
+
+    public Order getDirectionInOrder() {
+        return Order.valueOf(direction.toUpperCase());
+    }
+
+}

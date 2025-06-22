@@ -1,0 +1,14 @@
+package br.com.ff.arch_beaver.modules.user.domain.repository;
+
+import br.com.ff.arch_beaver.modules.user.domain.entity.UserEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface UserRepository extends JpaRepository<UserEntity, Long> {
+
+    @Query("SELECT p FROM UserEntity p WHERE UPPER(p.email.email) = UPPER(:login)")
+    UserEntity findByLogin(String login);
+
+}

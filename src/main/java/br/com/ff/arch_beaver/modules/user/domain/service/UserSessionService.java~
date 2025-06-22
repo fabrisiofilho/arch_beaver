@@ -1,0 +1,11 @@
+package br.com.senai.credenciado.modules.user.domain.service;
+
+import br.com.senai.credenciado.modules.user.domain.entity.UserSessionEntity;
+import br.com.senai.credenciado.modules.user.presentation.dto.SessionDTO;
+
+public interface UserSessionService {
+
+    void registerSessionWeb(SessionDTO session);
+    UserSessionEntity findUserByToken(String token);
+
+}

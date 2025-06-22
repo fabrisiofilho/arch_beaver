@@ -1,0 +1,32 @@
+package br.com.ff.arch_beaver.common.audit;
+
+import br.com.ff.arch_beaver.common.config.UserContext;
+import br.com.ff.arch_beaver.modules.user.domain.entity.UserEntity;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+
+import java.util.Optional;
+
+public class AuditListener {
+
+    @PrePersist
+    public void prePersist(AuditEntity entity) {
+        getCurrentUserId().ifPresent(entity::setCreator);
+        entity.setCreatorApplication(1L);
+    }
+
+    @PreUpdate
+    public void preUpdate(AuditEntity entity) {
+        if (Long.valueOf(0).equals(entity.getChanger())) {
+            entity.setChanger(null);
+        } else {
+            getCurrentUserId().ifPresent(entity::setChanger);
+        }
+        entity.setChangerApplication(1L);
+    }
+
+    private Optional<Long> getCurrentUserId() {
+        return Optional.ofNullable(UserContext.getCurrentUser()).map(UserEntity::getId);
+    }
+
+}

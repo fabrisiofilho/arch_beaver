@@ -1,0 +1,31 @@
+package br.com.ff.arch_beaver.modules.general.domain.entity;
+
+import br.com.ff.arch_beaver.common.audit.AuditEntity;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.io.Serializable;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Builder
+@Table(name = "email", schema = "geral")
+public class EmailEntity extends AuditEntity implements Serializable {
+
+    @Id
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "email_generator")
+    @SequenceGenerator(name = "email_generator",
+            sequenceName = "geral.email_id_email_seq",
+            allocationSize = 1)
+    @Column(name = "id_email")
+    private Long id;
+
+    private String email;
+
+}
+

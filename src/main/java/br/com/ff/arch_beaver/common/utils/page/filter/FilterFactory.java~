@@ -1,0 +1,10 @@
+package br.com.senai.credenciado.common.utils.page.filter;
+
+import br.com.senai.credenciado.common.utils.page.core.Filter;
+import com.blazebit.persistence.querydsl.BlazeJPAQuery;
+
+public interface FilterFactory {
+
+    <T> void apply(BlazeJPAQuery<T> query, Filter filter);
+
+}

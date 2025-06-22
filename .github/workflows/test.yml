@@ -25,11 +25,6 @@ jobs:
 
       - name: Verificar existência do relatório JaCoCo
         run: |
-          if [ ! -d "target/site/jacoco" ]; then
-            echo "Diretório target/site/jacoco NÃO existe!"
-            exit 1
-          fi
-          
           if [ -z "$(ls -A target/site/jacoco)" ]; then
             echo "Diretório target/site/jacoco está vazio!"
             exit 1

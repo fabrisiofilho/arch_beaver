@@ -1,5 +1,6 @@
-# arch_beaver]
+# arch_beaver
 
+Esta arquitetura é totalmente voltado para projetos de grande escala, a complexidade e o crescimento da aplicação exigem uma estrutura de pastas bem organizada e modular.
 A Clean Architecture e o Domain-Driven Design (DDD) são abordagens que podem ser combinadas para criar uma estrutura de projeto que é ao mesmo tempo modular e bem organizada. Aqui está um exemplo de estrutura de pastas e uma explicação de cada uma, baseada na Clean Architecture e DDD:
 
 ![image.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/8009764d-a2ad-4e9a-a62e-c09ba42a68d6/1b24655e-2ddf-48ca-a6e0-5c30ff404b67/image.png)

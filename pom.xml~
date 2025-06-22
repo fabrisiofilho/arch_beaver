@@ -261,6 +261,28 @@
 					</execution>
 				</executions>
 				<configuration>
+					<excludes>
+						<exclude>br/com/senai/seifnacional/entity/**</exclude>
+						<exclude>br/com/senai/seifnacional/dtos/**</exclude>
+						<exclude>br/com/senai/seifnacional/enums/**</exclude>
+						<exclude>br/com/senai/seifnacional/configurations/**</exclude>
+						<exclude>br/com/senai/seifnacional/constants/**</exclude>
+						<exclude>br/com/senai/seifnacional/exceptions/**</exclude>
+						<exclude>br/com/senai/seifnacional/handlers/**</exclude>
+						<exclude>br/com/senai/seifnacional/queues/**</exclude>
+						<exclude>br/com/senai/seifnacional/privileges/**</exclude>
+						<exclude>br/com/senai/seifnacional/securities/**</exclude>
+						<exclude>br/com/senai/seifnacional/securities/**</exclude>
+						<exclude>br/com/senai/seifnacional/utilities/**</exclude>
+						<exclude>br/com/senai/seifnacional/*.class</exclude>
+						<exclude>br/com/senai/seifnacional/repositories/**</exclude>
+						<exclude>br/com/senai/seifnacional/controllers/**</exclude>
+						<exclude>br/com/senai/seifnacional/integration/**</exclude>
+						<exclude>br/com/senai/seifnacional/notifications/**</exclude>
+						<exclude>br/com/senai/seifnacional/validators/**</exclude>
+						<exclude>br/com/senai/seifnacional/mappers/**</exclude>
+						<exclude>br/com/senai/seifnacional/mail/**</exclude>
+					</excludes>
 				</configuration>
 			</plugin>
 		</plugins>

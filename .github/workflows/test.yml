@@ -1,0 +1,39 @@
+name: Testes e Cobertura de Código
+
+on:
+  push:
+    branches: [ main, develop, master ]
+  pull_request:
+    branches: [ main, develop, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v3
+
+      - name: Configurar Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Rodar testes com cobertura
+        run: mvn clean verify
+
+      - name: Publicar relatório JaCoCo
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-report
+          path: target/site/jacoco/
+
+      - name: Validar cobertura mínima (opcional)
+        run: |
+          cobertura=$(grep -Po 'Total.*?\K\d+(?=%)' target/site/jacoco/index.html | head -1)
+          echo "Cobertura: $cobertura%"
+          if [ "$cobertura" -lt 80 ]; then
+            echo "Cobertura abaixo de 80%"
+            exit 1
+          fi

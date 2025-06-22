@@ -3,7 +3,7 @@
 Esta arquitetura é totalmente voltado para projetos de grande escala, a complexidade e o crescimento da aplicação exigem uma estrutura de pastas bem organizada e modular.
 A Clean Architecture e o Domain-Driven Design (DDD) são abordagens que podem ser combinadas para criar uma estrutura de projeto que é ao mesmo tempo modular e bem organizada. Aqui está um exemplo de estrutura de pastas e uma explicação de cada uma, baseada na Clean Architecture e DDD:
 
-![image.png](img/image.png)
+![image.png](img/clean.png)
 
 ### Estrutura de Pastas
 

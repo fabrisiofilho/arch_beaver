@@ -2,9 +2,9 @@ name: Testes e Cobertura
 
 on:
   push:
-    branches: [main]
+    branches: [master, main, develop]
   pull_request:
-    branches: [main]
+    branches: [master, main, develop]
 
 jobs:
   test:

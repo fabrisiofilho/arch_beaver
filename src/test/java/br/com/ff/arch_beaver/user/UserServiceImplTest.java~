@@ -1,0 +1,141 @@
+package br.com.ff.arch_beaver.user;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import br.com.ff.arch_beaver.common.error.exception.auth.AuthenticationSeifException;
+import br.com.ff.arch_beaver.common.security.models.UserLogin;
+import br.com.ff.arch_beaver.modules.general.domain.entity.EmailEntity;
+import br.com.ff.arch_beaver.modules.user.domain.entity.UserEntity;
+import br.com.ff.arch_beaver.modules.user.domain.repository.UserRepository;
+import br.com.ff.arch_beaver.modules.user.domain.service.UserSessionService;
+import br.com.ff.arch_beaver.modules.user.domain.service.impl.UserServiceImpl;
+import jakarta.validation.constraints.Email;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.*;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Objects;
+
+@ExtendWith(MockitoExtension.class)
+class UserServiceImplTest {
+
+    @Mock
+    private UserRepository userRepository;
+
+    @Mock
+    private UserSessionService userSessionService;
+
+    @InjectMocks
+    private UserServiceImpl userService;
+
+    private UserEntity activeUser;
+    private UserEntity inactiveUser;
+
+    @BeforeEach
+    void setup() {
+        activeUser = new UserEntity();
+        activeUser.setId(1L);
+        activeUser.setEmail(EmailEntity.builder().email("active@example.com").build());
+        activeUser.setActive(Boolean.TRUE);
+        activeUser.setProfileDescription("Admin");
+        activeUser.setProfileTypeKey("ADMIN");
+
+        inactiveUser = new UserEntity();
+        inactiveUser.setId(2L);
+        inactiveUser.setEmail(EmailEntity.builder().email("inactive@example.com").build());
+        inactiveUser.setActive(Boolean.FALSE);
+        inactiveUser.setProfileDescription("User");
+        inactiveUser.setProfileTypeKey("USER");
+    }
+
+    @Test
+    void testFindByLogin_userActive_shouldReturnUser() {
+        when(userRepository.findByLogin("active@example.com")).thenReturn(activeUser);
+
+        UserEntity result = userService.findByLogin("active@example.com");
+
+        assertNotNull(result);
+        assertEquals("active@example.com", result.getEmail().getEmail());
+        verify(userRepository).findByLogin("active@example.com");
+    }
+
+    @Test
+    void testFindByLogin_userInactive_shouldThrowException() {
+        when(userRepository.findByLogin("inactive@example.com")).thenReturn(inactiveUser);
+
+        AuthenticationSeifException exception = assertThrows(AuthenticationSeifException.class, () -> {
+            userService.findByLogin("inactive@example.com");
+        });
+
+        assertEquals("Usuário está inativo", exception.getMessage());
+    }
+
+    @Test
+    void testFindByLogin_userNotFound_shouldThrowException() {
+        when(userRepository.findByLogin("notfound@example.com")).thenReturn(null);
+
+        AuthenticationSeifException exception = assertThrows(AuthenticationSeifException.class, () -> {
+            userService.findByLogin("notfound@example.com");
+        });
+
+        assertEquals("Usuário informado não está cadastrado", exception.getMessage());
+    }
+
+    @Test
+    void testLogin_shouldReturnUserLogin() {
+        when(userRepository.findByLogin("active@example.com")).thenReturn(activeUser);
+
+        UserLogin userLogin = userService.login("active@example.com");
+
+        assertNotNull(userLogin);
+        assertEquals(activeUser.getId(), userLogin.getId());
+        assertEquals(activeUser.getEmail().getEmail(), userLogin.getEmail());
+        assertEquals(activeUser.getProfileDescription(), userLogin.getProfile());
+        assertEquals(activeUser.getProfileTypeKey(), userLogin.getProfileTypeKey());
+    }
+
+    // Test updateToken - verify interactions and that UserContext is cleared
+    @Test
+    void testUpdateToken_shouldRegisterSessionAndSaveUser() {
+        String token = "token123";
+        String email = "active@example.com";
+
+        when(userRepository.findByLogin(email)).thenReturn(activeUser);
+
+        // Como UserContext é uma classe estática, normalmente precisa ser mockada ou verificada indiretamente.
+        // Aqui vamos focar nas interações do userSessionService e userRepository.
+
+        userService.updateToken(token, email);
+
+        // Verifica se userSessionService.registerSessionWeb foi chamado com o SessionDTO correto
+        ArgumentCaptor<SessionDTO> captor = ArgumentCaptor.forClass(SessionDTO.class);
+        verify(userSessionService).registerSessionWeb(captor.capture());
+
+        SessionDTO capturedSession = captor.getValue();
+        assertEquals(activeUser.getId(), capturedSession.getUserId());
+        assertEquals(token, capturedSession.getToken());
+
+        // Verifica se userRepository.save foi chamado com o usuário correto
+        verify(userRepository).save(activeUser);
+    }
+
+    // Test findByToken - should return the UserEntity linked to the session
+    @Test
+    void testFindByToken_shouldReturnUserFromSession() {
+        String token = "token123";
+
+        UserSessionEntity userSession = new UserSessionEntity();
+        userSession.setUser(activeUser);
+
+        when(userSessionService.findUserByToken(token)).thenReturn(userSession);
+
+        UserEntity result = userService.findByToken(token);
+
+        assertNotNull(result);
+        assertEquals(activeUser, result);
+    }
+}
+
